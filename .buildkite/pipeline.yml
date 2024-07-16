@@ -5,11 +5,12 @@ steps:
     artifact_paths:
       - "go-build-profile.gz"
     command: |
+      /bin/bash tests/core/cgo/generate_imported_dylib.sh
       bazelisk \
       build \
       --profile=go-build-profile.gz \
       -- \
-      //go/...
+      //...
 
   - label: "Go build (with caching)"
     agents:
@@ -17,10 +18,11 @@ steps:
     artifact_paths:
       - "go-build-profile.gz"
     command: |
+      /bin/bash tests/core/cgo/generate_imported_dylib.sh
       curl -fsSL https://get.namespace.so/cloud/install.sh | sh -s -- --version 0.0.386
       nsc bazel cache setup --bazelrc=/tmp/bazel-cache.bazelrc
       bazelisk --bazelrc=/tmp/bazel-cache.bazelrc \
         build \
         --profile=go-build-profile.gz \
         -- \
-        //go/...
+        //...
